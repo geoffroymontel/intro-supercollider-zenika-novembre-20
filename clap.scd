@@ -62,6 +62,31 @@ Routine.new({
 
 ~claps = [1,1,1,0,1,1,0,1,0,1,1,0];
 
+// le début
+
+(
+TempoClock.default.tempo = 100/60;
+
+Routine.new({
+	~pattern = Pseq(~claps);
+
+	4.do({
+		var stream, time;
+		stream = ~pattern.asStream;
+
+		12.do( {|j|
+			if (stream.next == 1) {
+				Synth(\samplePlayer, [out: 0, bufnum: ~clap1Samples.choose]);
+				Synth(\samplePlayer, [out: 0, bufnum: ~clap2Samples.choose]);
+			};
+			(1/ 4).wait; // des double-croches = 1/4 de temps
+		});
+	});
+}).play;
+)
+
+// puis le déphasage
+
 (
 TempoClock.default.tempo = 100/60;
 
