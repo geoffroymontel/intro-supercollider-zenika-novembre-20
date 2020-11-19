@@ -1,7 +1,8 @@
-Introduction à SuperCollider
+### Introduction à SuperCollider
+
 Pour événement Zenika, jeudi 19 novembre 2020
 
-Usage :
+Mode d'emploi : 
 - téléchargez SuperCollider ici :
 https://supercollider.github.io/download
 - clonez ce repo
