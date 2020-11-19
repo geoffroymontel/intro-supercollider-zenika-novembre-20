@@ -5,7 +5,7 @@
 // Créé en 1996 par James McCartney, open sourcé en 2002
 // Maintenu par une petite équipe de volontaires
 // Architecture client (langage SuperCollider spécifique pour le musicien) - serveur (C++)
-// Back-end pour plusieurs autres logiciels : Sonic PI, TidalCycles
+// Le serveur est aussi le back-end pour plusieurs autres logiciels : Sonic PI, TidalCycles
 // Autres logiciels similaires mais programmation grpahique : Max / MSP, Pure Data, Reaktor, etc.
 
 // 1 : regardez la vidéo d'une interprétation de Clapping Music de Steve Reich (1972)
@@ -40,10 +40,10 @@ SynthDef(\samplePlayer, { |out = 0, bufnum|
 }).add;
 )
 
-// évaluez chacune de ces deux lignes
-Synth(\samplePlayer, [out: 0, bufnum: ~clap]); // notre synthé qui joue un clap
+// évaluez la ligne suivante
+Synth(\samplePlayer, [out: 0, bufnum: ~clap]); // on entend notre synthé qui joue un clap
 
-// les routines permettent de séquencer à la main deux événements
+// les routines permettent de séquencer "à la main" deux événements
 (
 Routine.new({
 	Synth(\samplePlayer, [out: 0, bufnum: ~clap]);
@@ -53,7 +53,7 @@ Routine.new({
 )
 
 // il y a tout une librairie de patterns qui permettent de séquencer plus facilement
-// lire le Pattern Guide
+// voir le Pattern Guide dans l'aide en ligne
 ~pattern = Pn(Pseq([1, 2]), 2); // valeur 1, puis 2, repété 2 fois
 ~stream = ~pattern.asStream;
 ~stream.next;
@@ -141,7 +141,7 @@ Routine.new({
 SynthDef(\hammond,{ |out = 0, freq = 440, amp = 0.1, pan = 0, drawbars = #[1,0,1,0,1,0,1,0,1]|
 	var sound;
 
-	sound = Mix.fill(9, {|i| SinOsc.ar(freq: freq * (i+1)) * drawbars[i] / 9 }); // on mixe 9 oscillateurs en sinus
+	sound = Mix.fill(9, {|i| SinOscFB.ar(freq: freq * (i+1) * (1 + (LFNoise1.ar(10) * 0.001)),  feedback: drawbars[i] / 2) * drawbars[i] / 9 }); // on mixe 9 oscillateurs en sinus
 	sound =  BLowPass.ar(sound, 8000); // un petit filtre pour pas que ce soit trop criard
 	sound = sound * EnvGen.ar(Env.linen(0.02,0.1,1.0), doneAction: Done.freeSelf); // enveloppe pour adoucir l'attaque et la fin du son
 	Out.ar(out, Pan2.ar(sound * amp, pan)); // panoramique et volume général
@@ -157,7 +157,7 @@ Pbind(*[
 	root: 0,
 	octave: 5,
 	scale: Scale.major,
-	drawbars: [[1, 1, 0, 0, 0, 0, 0, 0, 0]]
+	drawbars: [[1, 0, 1, 1, 1, 0, 0, 0, 0]]
 ]).play
 )
 
